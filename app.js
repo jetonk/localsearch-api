@@ -1,19 +1,12 @@
 import express from "express";
 import config from "./src/config/index.js";
+import { getPlaces, searchPlaces } from "./src/controllers/place.controller.js";
 
 const app = express();
 
-const PLACES = {};
-
-app.get("/places", (req, res) => {
-  res.send(PLACES);
-});
-
-app.get("/places/:search", (req, res) => {
-  const { search } = req.params;
-  res.send({ search });
-});
+app.get("/places", getPlaces);
+app.get("/places/:search", searchPlaces);
 
 app.listen(config.PORT, () => {
-  console.log(`Example app listening on port ${config.PORT}`);
+  console.log(`API is listening on port ${config.PORT}`);
 });
