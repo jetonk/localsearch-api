@@ -1,30 +1,8 @@
-export const populateWebsite = (contact, contacts) => {
-  const { contact_type } = contact;
-
-  if (contact_type === "url") {
-    contacts[contact_type] = {
-      label: "Website",
-      value: contact.service_code,
-    };
-  }
-  return contacts;
-};
-
-let phoneValue = "";
-export const populatePhone = (contact, contacts) => {
-  const { contact_type } = contact;
-
-  if (contact_type === "phone") {
-    const isEmpty = phoneValue.length;
-
-    phoneValue += `${
-      isEmpty ? `, ${contact.call_link}` : `${contact.call_link}`
-    }`;
-  }
-
-  contacts["phone"] = { label: "Phone", value: phoneValue };
-
-  return contacts;
+export const formatContact = (place) => {
+  return place.addresses[0].contacts.map((contact) => {
+    const type = contact.contact_type;
+    return { type, [type]: contact.call_link || contact.service_code };
+  });
 };
 
 export const formatPlaceData = (Places, place) => {
@@ -49,13 +27,14 @@ export const formatPlaceDetailsData = (PlaceDetails, place) => {
   } = place;
 
   const openingHours = formatOpeningHours(opening_hours.days);
+  console.log("formatPlaceDetailsData::contacts", formatContact(place));
   PlaceDetails[local_entry_id] = {
     local_entry_id: local_entry_id,
     source: source,
     displayed_what: displayed_what,
     displayed_where: displayed_where,
     opening_hours: openingHours,
-    contacts: {},
+    contacts: formatContact(place),
   };
   return PlaceDetails;
 };
@@ -86,7 +65,7 @@ export function formatOpeningHours(days) {
           ? hours[lookupShift]?.days.concat(key)
           : [key],
         firstShift,
-        secondShift: secondShift === " - " ? closedShift : secondShift,
+        secondShift: secondShift === " - " ? "" : secondShift,
       };
     } else {
       hours[closedShift] = {
@@ -94,7 +73,6 @@ export function formatOpeningHours(days) {
           ? hours[closedShift].days.concat(key)
           : [key],
         firstShift: closedShift,
-        secondShift: closedShift,
       };
     }
   });

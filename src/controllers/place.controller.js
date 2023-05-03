@@ -2,8 +2,6 @@ import axios from "axios";
 import config from "../config/index.js";
 import { CacheManager } from "../services/cacheManager.js";
 import {
-  populateWebsite,
-  populatePhone,
   formatPlaceData,
   formatPlaceDetailsData,
 } from "../utils/dataFormatter.js";
@@ -17,22 +15,18 @@ const fetchAndProcessPlaceData = async (type) => {
   let Places = [];
   for (const placeId of PLACE_IDS) {
     const response = await axios.get(`${config.PLACES_API_URL}/${placeId}`);
-    const { local_entry_id, addresses } = response.data;
 
     Places = formatPlaceData(Places, response.data);
     PlaceDetails = formatPlaceDetailsData(Places, response.data);
 
-    for (let contact of addresses[0].contacts) {
-      populateWebsite(contact, PlaceDetails[local_entry_id].contacts);
-      populatePhone(contact, PlaceDetails[local_entry_id].contacts);
-    }
-
     cacheManager.set("places", Places);
     cacheManager.set("placedetails", PlaceDetails);
   }
+
   if (type === "places") {
     return Places;
   }
+  
   return PlaceDetails;
 };
 
