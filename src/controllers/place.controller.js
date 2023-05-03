@@ -13,6 +13,7 @@ const PLACE_IDS = ["ohGSnJtMIC5nPfYRi_HTAg", "GXvPAor1ifNfpF0U5PTG0w"];
 const fetchAndProcessPlaceData = async (type) => {
   let PlaceDetails = {};
   let Places = [];
+
   for (const placeId of PLACE_IDS) {
     const response = await axios.get(`${config.PLACES_API_URL}/${placeId}`);
 
@@ -23,11 +24,7 @@ const fetchAndProcessPlaceData = async (type) => {
     cacheManager.set("placedetails", PlaceDetails);
   }
 
-  if (type === "places") {
-    return Places;
-  }
-  
-  return PlaceDetails;
+  return type === "places" ? Places : PlaceDetails;
 };
 
 export const getPlaces = async (req, res) => {

@@ -1,7 +1,7 @@
 export const formatContact = (place) => {
   return place.addresses[0].contacts.map((contact) => {
     const type = contact.contact_type;
-    return { type, [type]: contact.call_link || contact.service_code };
+    return { type, [type]: [contact.call_link || contact.service_code] };
   });
 };
 
@@ -14,6 +14,7 @@ export const formatPlaceData = (Places, place) => {
     displayed_where,
   };
   Places.push(newPlace);
+
   return Places;
 };
 
@@ -27,7 +28,7 @@ export const formatPlaceDetailsData = (PlaceDetails, place) => {
   } = place;
 
   const openingHours = formatOpeningHours(opening_hours.days);
-  console.log("formatPlaceDetailsData::contacts", formatContact(place));
+
   PlaceDetails[local_entry_id] = {
     local_entry_id: local_entry_id,
     source: source,
