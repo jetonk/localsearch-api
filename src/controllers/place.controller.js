@@ -10,28 +10,26 @@ import {
 
 const cacheManager = new CacheManager(config.cacheTTLSeconds);
 
-const PLACE_IDS = ["GXvPAor1ifNfpF0U5PTG0w", "ohGSnJtMIC5nPfYRi_HTAg"];
+const PLACE_IDS = ["ohGSnJtMIC5nPfYRi_HTAg", "GXvPAor1ifNfpF0U5PTG0w"];
 
 const fetchAndProcessPlaceData = async (type) => {
   let PlaceDetails = {};
   let Places = [];
   for (const placeId of PLACE_IDS) {
     const response = await axios.get(`${config.PLACES_API_URL}/${placeId}`);
-
     const { local_entry_id, addresses } = response.data;
 
     Places = formatPlaceData(Places, response.data);
-
     PlaceDetails = formatPlaceDetailsData(Places, response.data);
 
     for (let contact of addresses[0].contacts) {
       populateWebsite(contact, PlaceDetails[local_entry_id].contacts);
       populatePhone(contact, PlaceDetails[local_entry_id].contacts);
     }
-  }
 
-  cacheManager.set("places", Places);
-  cacheManager.set("placedetails", PlaceDetails);
+    cacheManager.set("places", Places);
+    cacheManager.set("placedetails", PlaceDetails);
+  }
   if (type === "places") {
     return Places;
   }
@@ -62,7 +60,11 @@ export const getPlaceById = async (req, res) => {
     } else {
       places = await fetchAndProcessPlaceData();
     }
-    res.json(places[placeId]);
+    if (places[placeId]) {
+      res.json(places[placeId]);
+    } else {
+      res.status(404).send({ message: "Place not found.." });
+    }
   } catch (error) {
     console.error("error", error);
     res.status(error?.response?.status).send(error.message);
@@ -80,8 +82,8 @@ export const searchPlaces = async (req, res) => {
     }
     const filteredPlaces = places.filter((place) => {
       return (
-        place.displayed_what.includes(search) ||
-        place.displayed_where.includes(search)
+        place.displayed_what.toLowerCase().includes(search.toLowerCase()) ||
+        place.displayed_where.toLowerCase().includes(search.toLowerCase())
       );
     });
     res.json(filteredPlaces);
