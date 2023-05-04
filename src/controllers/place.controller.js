@@ -5,10 +5,9 @@ import {
   formatPlaceData,
   formatPlaceDetailsData,
 } from "../utils/dataFormatter.js";
+import { PLACE_IDS } from "../config/index.js";
 
 const cacheManager = new CacheManager(config.cacheTTLSeconds);
-
-const PLACE_IDS = ["ohGSnJtMIC5nPfYRi_HTAg", "GXvPAor1ifNfpF0U5PTG0w"];
 
 const fetchAndProcessPlaceData = async (type) => {
   let PlaceDetails = {};

@@ -25,4 +25,6 @@ const config = {
   },
 };
 
+export const PLACE_IDS = ["ohGSnJtMIC5nPfYRi_HTAg", "GXvPAor1ifNfpF0U5PTG0w"];
+
 export default config[env];
