@@ -6,21 +6,21 @@ const config = {
     PLACES_API_URL:
       process.env.PLACES_API_URL ||
       `https://storage.googleapis.com/coding-session-rest-api`,
-    PORT: 3000,
+    PORT: process.env.PORT || 3000,
     cacheTTLSeconds: 43200, // seconds, 12 hours
   },
   test: {
     PLACES_API_URL:
       process.env.PLACES_API_URL ||
       `https://storage.googleapis.com/coding-session-rest-api`,
-    PORT: 3000,
+    PORT: process.env.PORT || 3000,
     cacheTTLSeconds: 43200, // seconds, 12 hours
   },
   production: {
     PLACES_API_URL:
       process.env.PLACES_API_URL ||
       `https://storage.googleapis.com/coding-session-rest-api`,
-    PORT: 3000,
+    PORT: process.env.PORT || 3000,
     cacheTTLSeconds: 43200, // seconds, 12 hours
   },
 };
