@@ -20,4 +20,4 @@
 ### Run the API using Docker
 
 - docker build -t localsearch-api .
-- docker run -p 3000:3000 localsearch-api
+- docker run -p 3000:3000 --env-file .env localsearch-api
